@@ -1,3 +1,3 @@
 # ltzvisor
 
-Lightweight TrustZone-assisted Hypervisor
+LTZVisor, Lightweight TrustZone-assisted Hypervisor
