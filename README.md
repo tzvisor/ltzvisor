@@ -13,9 +13,9 @@ NOTE: This is work in progress! Don't expect things to be complete. Use at your 
 Hardware requirements information comming soon ...
 
 
-## Sotfware requirements
+## Software requirements
 
-Sotfware requirements information comming soon ...
+Software requirements information comming soon ...
 
 
 
