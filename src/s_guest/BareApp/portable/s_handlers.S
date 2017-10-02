@@ -84,7 +84,7 @@ _low_level_abt:
 yield:
 	/* Explicit hypercall */
 	ldr	r0,=LTZVISOR_SCHED_SYSCALL
-	smc 0
+	smc 	0
 	bx 	lr
 
 

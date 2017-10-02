@@ -52,7 +52,7 @@
 #include<s_isr.h>
 
 /**
- * Zyynq-specific hardware initialization
+ * Zynq-specific hardware initialization
  *
  * @param
  *

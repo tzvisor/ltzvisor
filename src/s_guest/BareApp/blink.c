@@ -41,7 +41,7 @@
  *
  * This file contains a bare-metal Blink application.
  * 
- * (#) $id: blink.c 19-09-2017 s_pinto$
+ * (#) $id: blink.c 27-09-2017 s_pinto$
 */
 
 #include<hw_zynq.h>
@@ -77,6 +77,7 @@ int main() {
 void led_blink( void * parameters ){
 
 	static uint32_t toggle;
+	/** 4GPIO (LED) in FPGA fabric */
 	static uint32_t *ptr = (uint32_t *) 0x41200000;
 
 	for( ;; ){

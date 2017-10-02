@@ -48,14 +48,19 @@
 #include <s_isr.h>
 
 uint32_t interrupt;
+
 tHandler* sfiq_handlers[NO_OF_INTERRUPTS_IMPLEMENTED] = {NULL};
 
+/**
+ * Generic FIQ handler
+ *
+ * @param	interrupt_ = interrupt number 	 	
+ *
+ * @retval 	
+ */
 void sFIQ_handler(uint32_t interrupt_){
+
 	if (sfiq_handlers[interrupt_])
 		sfiq_handlers[interrupt_]((void *) interrupt_);
 }
-
-void vTickISR(){
-}
-
 

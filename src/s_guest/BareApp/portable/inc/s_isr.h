@@ -57,7 +57,5 @@
 /** Type definition of the interrupt handler */
 typedef void (handler)(void * t);
 
-void vTickISR();
-
 #endif /* __S_ISR_H */
 

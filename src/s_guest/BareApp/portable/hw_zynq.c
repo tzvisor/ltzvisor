@@ -48,6 +48,13 @@
 
 extern tHandler* sfiq_handlers[NO_OF_INTERRUPTS_IMPLEMENTED];
 
+/**
+ * Zynq-specific hardware initialization
+ *
+ * @param
+ *
+ * @retval
+ */
 void hw_init( void ){
 
 	/** Initialize TTC1_2 as S Tick */
@@ -57,13 +64,16 @@ void hw_init( void ){
 	interrupt_enable(TTC1_TTCx_2_INTERRUPT,TRUE);
 	interrupt_target_set(TTC1_TTCx_2_INTERRUPT,0,1);
 	interrupt_priority_set(TTC1_TTCx_2_INTERRUPT,6);
-	
-	/** Set ISR handler */	
-	sfiq_handlers[TTC1_TTCx_2_INTERRUPT] = vTickISR;
 
 }
 
-
+/**
+ * Set secure world tick
+ *
+ * @param		time = time in useconds
+ *
+ * @retval
+ */
 uint32_t tick_set( uint32_t time ){
 
 	uint32_t ret = 1;
