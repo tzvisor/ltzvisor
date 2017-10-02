@@ -5,7 +5,6 @@
  *
  * Authors:
  *  Sandro Pinto <sandro@tzvisor.org>
- *  Jorge Pereira <jorgepereira89@gmail.com>
  *
  * This file is part of LTZVisor.
  *
@@ -38,35 +37,42 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301 USA.
  *
- * [ltzvisor_nsguest_config.c]
+ * [hw_zynq.c]
  *
- * This file contains the LTZVisor NS Guest configuration.
+ * This file contains hardware-related initializations for Zynq.
  * 
- * (#) $id: ltzvisor_nsguest_config.c 10-10-2015 s_pinto & j_pereira $
- * (#) $id: ltzvisor_nsguest_config.c 18-09-2017 s_pinto (modified)$
+ * (#) $id: hw_zynq.c 02-10-2017 s_pinto$
 */
 
-#include <ltzvisor_nsguest_config.h>
+#include<hw_zynq.h>
 
-/** Info from ltzvisor_nsguest.S */
-extern uint32_t GPOS0_start, GPOS0_end;
+extern tHandler* sfiq_handlers[NO_OF_INTERRUPTS_IMPLEMENTED];
 
-/** Config structure according to NS Guest */
-struct nsguest_conf_entry nsguest_config[] ={
-	{
-		.gce_name = "Linux 3.3 (vanilla)",
-		.gce_id = 0,
-		/* No ram disk needed */
-		.gce_trd_init = 0,
-		/* Binary image size */
-		.gce_bin_start = (uint32_t) &GPOS0_start,
-		.gce_bin_end = (uint32_t) &GPOS0_end,
-		/* Load address */
-		#ifndef CONFIG_GPOSDDR
-			//.gce_bin_load = 0x0,
-			.gce_bin_load = 0x00100000,
-		#else
-			.gce_bin_load = 0x20000000,
-		#endif
-	}
-};
+void hw_init( void ){
+
+	/** Initialize TTC1_2 as S Tick */
+	ttc_init(TTC1,TTCx_2,INTERVAL);
+
+	/** Config TTC1_2 ISR*/
+	interrupt_enable(TTC1_TTCx_2_INTERRUPT,TRUE);
+	interrupt_target_set(TTC1_TTCx_2_INTERRUPT,0,1);
+	interrupt_priority_set(TTC1_TTCx_2_INTERRUPT,6);
+	
+	/** Set ISR handler */	
+	sfiq_handlers[TTC1_TTCx_2_INTERRUPT] = vTickISR;
+
+}
+
+
+uint32_t tick_set( uint32_t time ){
+
+	uint32_t ret = 1;
+
+	/** Set tick rate */
+	ret = ttc_request(TTC1, TTCx_2, time);
+
+	/** Start counting */
+	ttc_enable(TTC1, TTCx_2);
+
+	return ret;
+}

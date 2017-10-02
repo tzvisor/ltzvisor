@@ -53,9 +53,5 @@
 .global GPOS0_start
 .global GPOS0_end
 GPOS0_start:
-	#ifndef CONFIG_GPOSDDR
-
-	#else
-		.incbin "./ns_guest/zynq/linux3.3_ddr.bin";
-	#endif
+	.incbin "./ns_guest/zynq/baremetal.bin";
 GPOS0_end:

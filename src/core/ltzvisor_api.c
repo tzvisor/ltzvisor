@@ -140,6 +140,9 @@ uint32_t ltzvisor_nsguest_create( struct nsguest_conf_entry *g )
 
 	/** Load Guest bin to Non-Secure Memory */
 	printk("      * NS_Guest loading ...  \n\t");
+	printk("      * NS_Guest gce_bin_load: 0x%x \n\t", g->gce_bin_load);
+	printk("      * NS_Guest gce_bin_start: 0x%x \n\t", g->gce_bin_start);
+	printk("      * NS_Guest gce_bin_end: 0x%x \n\t", g->gce_bin_end);
 	memcpy((uint32_t *)g->gce_bin_load,(uint32_t *)g->gce_bin_start,(g->gce_bin_end - g->gce_bin_start));
 	if(g->gce_trd_init) {
 		memcpy((uint32_t *)g->gce_trd_load,(uint32_t *)g->gce_trd_start,(g->gce_trd_end - g->gce_trd_start));

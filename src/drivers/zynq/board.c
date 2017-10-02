@@ -61,6 +61,9 @@ uint32_t board_init(void){
 	write32( (void *)SLCR_UNLOCK, SLCR_UNLOCK_KEY);
 
 	/** Handling memory security */
+	write32( (void *)TZ_OCM_RAM0, 0xffffffff);
+	write32( (void *)TZ_OCM_RAM1, 0xffffffff);
+	write32( (void *)TZ_OCM, 0xffffffff);
 	/* Handling DDR memory security (first 14segments NS)l */
 	write32( (void *)TZ_DDR_RAM, 0x00007fff);
 	printk("      * Memory security - OK  \n\t");

@@ -5,7 +5,6 @@
  *
  * Authors:
  *  Sandro Pinto <sandro@tzvisor.org>
- *  Jorge Pereira <jorgepereira89@gmail.com>
  *
  * This file is part of LTZVisor.
  *
@@ -38,35 +37,25 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301 USA.
  *
- * [ltzvisor_nsguest_config.c]
+ * [s_isr.c]
  *
- * This file contains the LTZVisor NS Guest configuration.
+ * This file contains the interrupt handling.
  * 
- * (#) $id: ltzvisor_nsguest_config.c 10-10-2015 s_pinto & j_pereira $
- * (#) $id: ltzvisor_nsguest_config.c 18-09-2017 s_pinto (modified)$
+ * (#) $id: s_isr.c 27-09-2017 s_pinto$
 */
 
-#include <ltzvisor_nsguest_config.h>
+#include <gic.h>
+#include <s_isr.h>
 
-/** Info from ltzvisor_nsguest.S */
-extern uint32_t GPOS0_start, GPOS0_end;
+uint32_t interrupt;
+tHandler* sfiq_handlers[NO_OF_INTERRUPTS_IMPLEMENTED] = {NULL};
 
-/** Config structure according to NS Guest */
-struct nsguest_conf_entry nsguest_config[] ={
-	{
-		.gce_name = "Linux 3.3 (vanilla)",
-		.gce_id = 0,
-		/* No ram disk needed */
-		.gce_trd_init = 0,
-		/* Binary image size */
-		.gce_bin_start = (uint32_t) &GPOS0_start,
-		.gce_bin_end = (uint32_t) &GPOS0_end,
-		/* Load address */
-		#ifndef CONFIG_GPOSDDR
-			//.gce_bin_load = 0x0,
-			.gce_bin_load = 0x00100000,
-		#else
-			.gce_bin_load = 0x20000000,
-		#endif
-	}
-};
+void sFIQ_handler(uint32_t interrupt_){
+	if (sfiq_handlers[interrupt_])
+		sfiq_handlers[interrupt_]((void *) interrupt_);
+}
+
+void vTickISR(){
+}
+
+

@@ -20,7 +20,7 @@ export PROJECT_NAME = LTZVisor
 export PROJECT_VERSION = 0.1
 
 # Configuration File
-ifeq ($(BOARD), ZYNQ)
+ifeq ($(BOARD), ZC702)
 	export BOARD_DIR=zynq
 	TARGET_CCFLAGS += -DCONFIG_ZYNQ=1
 	TARGET_ASMFLAGS += -DCONFIG_ZYNQ=1
@@ -65,7 +65,12 @@ export s_guest_dir=$(src_dir)/s_guest
 
 OFFSETS_FILE= $(cpu_arch_dir)/inc/asm-offsets.h
 LD_SCRIPT	= $(drivers_dir)/linker.ld
-KERNEL		= $(s_guest_dir)/kernel.o
+ifeq ($(BM_SUPPORT), y)
+	KERNEL = $(s_guest_dir)/kernel.o
+endif
+ifeq ($(FreeRTOS_SUPPORT), y)
+	KERNEL = $(s_guest_dir)/kernel.o
+endif
 
 # Setup list of objects for compilation
 cpu-platform-mks=$(shell if [ -d $(cpu_platform_dir) ]; then find $(cpu_platform_dir) -iname "objects.mk" | sort -r; fi)
@@ -78,16 +83,24 @@ ns_guest-object-mks=$(shell if [ -d $(ns_guest_dir) ]; then find $(ns_guest_dir)
 s_guest-object-mks=$(shell if [ -d $(s_guest_dir) ]; then find $(s_guest_dir) -iname "objects.mk" | sort -r; fi)
 
 # Setup path of S_Guest directories
-export freertos_core_dir=$(s_guest_dir)/FreeRTOS
-export freertos_core_apps_dir=$(freertos_core_dir)/apps
-export freertos_portable_gcc_dir=$(freertos_core_dir)/portable/GCC
-export freertos_portable_mem_dir=$(freertos_core_dir)/portable/MemMang
-
-# Setup list of objects for compilation
-freertos-core-mks=$(shell if [ -d $(freertos_core_dir) ]; then find $(freertos_core_dir) -iname "objects.mk" | sort -r; fi)
-freertos-portable-gcc-mks=$(shell if [ -d $(freertos_portable_gcc_dir) ]; then find $(freertos_portable_gcc_dir) -iname "objects.mk" | sort -r; fi)
-freertos-portable-mem-mks=$(shell if [ -d $(freertos_portable_mem_dir) ]; then find $(freertos_portable_mem_dir) -iname "objects.mk" | sort -r; fi)
-freertos-core-apps-mks=$(shell if [ -d $(freertos_core_apps_dir) ]; then find $(freertos_core_apps_dir) -iname "objects.mk" | sort -r; fi)
+ifeq ($(BM_SUPPORT), y)
+	export bm_core_dir=$(s_guest_dir)/BareApp
+	export bm_core_port_dir=$(bm_core_dir)/portable
+	# Setup list of objects for compilation
+	bm_core-mks=$(shell if [ -d $(bm_core_dir) ]; then find $(bm_core_dir) -iname "objects.mk" | sort -r; fi)
+	bm_core_port-mks=$(shell if [ -d $(bm_core_port_dir) ]; then find $(bm_core_port_dir) -iname "objects.mk" | sort -r; fi)
+endif
+ifeq ($(FreeRTOS_SUPPORT), y)
+	export freertos_core_dir=$(s_guest_dir)/FreeRTOS
+	export freertos_core_apps_dir=$(freertos_core_dir)/apps
+	export freertos_portable_gcc_dir=$(freertos_core_dir)/portable/GCC
+	export freertos_portable_mem_dir=$(freertos_core_dir)/portable/MemMang
+	# Setup list of objects for compilation
+	freertos-core-mks=$(shell if [ -d $(freertos_core_dir) ]; then find $(freertos_core_dir) -iname "objects.mk" | sort -r; fi)
+	freertos-portable-gcc-mks=$(shell if [ -d $(freertos_portable_gcc_dir) ]; then find $(freertos_portable_gcc_dir) -iname "objects.mk" | sort -r; fi)
+	freertos-portable-mem-mks=$(shell if [ -d $(freertos_portable_mem_dir) ]; then find $(freertos_portable_mem_dir) -iname "objects.mk" | sort -r; fi)
+	freertos-core-apps-mks=$(shell if [ -d $(freertos_core_apps_dir) ]; then find $(freertos_core_apps_dir) -iname "objects.mk" | sort -r; fi)
+endif
 
 include $(cpu-platform-mks)
 include $(cpu-object-mks)
@@ -97,11 +110,16 @@ include $(drivers-common-object-mks)
 include $(drivers-object-mks)
 include $(ns_guest-object-mks)
 include $(s_guest-object-mks)
-
-include $(freertos-core-mks)
-include $(freertos-core-apps-mks)
-include $(freertos-portable-gcc-mks)
-include $(freertos-portable-mem-mks)
+ifeq ($(BM_SUPPORT), y)
+	include $(bm_core-mks)
+	include $(bm_core_port-mks)
+endif
+ifeq ($(FreeRTOS_SUPPORT), y)
+	include $(freertos-core-mks)
+	include $(freertos-core-apps-mks)
+	include $(freertos-portable-gcc-mks)
+	include $(freertos-portable-mem-mks)
+endif
 
 objs-y+=$(foreach obj,$(cpu-objs-y),$(src_dir)/arch/$(ARCH_DIR)/$(obj))
 objs-y+=$(foreach obj,$(cpu-platform-objs-y),$(src_dir)/arch/$(ARCH_DIR)/$(PLATFORM_DIR)/$(obj))
@@ -110,12 +128,18 @@ objs-y+=$(foreach obj,$(core-objs-y),$(src_dir)/core/$(obj))
 objs-y+=$(foreach obj,$(drivers-common-objs-y),$(src_dir)/drivers/common/$(obj))
 objs-y+=$(foreach obj,$(drivers-objs-y),$(src_dir)/drivers/$(BOARD_DIR)/$(obj))
 objs-y+=$(foreach obj,$(ns_guest-objs-y),$(src_dir)/ns_guest/$(obj))
-objs-y+=$(foreach obj,$(s_guest-objs-y),$(src_dir)/s_guest/$(obj))
 
-kernel-objs-y=$(foreach obj,$(kernel-portable-gcc-objs-y),$(freertos_portable_gcc_dir)/$(obj))
-kernel-objs-y+=$(foreach obj,$(kernel-core-objs-y),$(freertos_core_dir)/$(obj))
-kernel-objs-y+=$(foreach obj,$(kernel-core-app-objs-y),$(freertos_core_apps_dir)/$(obj))
-kernel-objs-y+=$(foreach obj,$(kernel-portable-mem-objs-y),$(freertos_portable_mem_dir)/$(obj))
+ifeq ($(BM_SUPPORT), y)
+	bm_guest-objs-y=$(foreach obj,$(s_guest-objs-y),$(bm_core_dir)/$(obj))
+	bm_guest-objs-y+=$(foreach obj,$(s_guest_port-objs-y),$(bm_core_port_dir)/$(obj))
+endif
+ifeq ($(FreeRTOS_SUPPORT), y)
+	objs-y+=$(foreach obj,$(s_guest-objs-y),$(src_dir)/s_guest/$(obj))
+	kernel-objs-y=$(foreach obj,$(kernel-portable-gcc-objs-y),$(freertos_portable_gcc_dir)/$(obj))
+	kernel-objs-y+=$(foreach obj,$(kernel-core-objs-y),$(freertos_core_dir)/$(obj))
+	kernel-objs-y+=$(foreach obj,$(kernel-core-app-objs-y),$(freertos_core_apps_dir)/$(obj))
+	kernel-objs-y+=$(foreach obj,$(kernel-portable-mem-objs-y),$(freertos_portable_mem_dir)/$(obj))
+endif
 
 # Setup list of targets for compilation
 targets-y=$(bin_dir)/$(PROJECT_NAME).elf
@@ -133,12 +157,17 @@ cppflags+=-I$(src_dir)/arch/$(ARCH_DIR)/$(PLATFORM_DIR)/inc
 cppflags+=-I$(svisor_dir)/core/inc
 cppflags+=-I$(src_dir)/ns_guest/inc
 
-# Setup FreeRTOS compilation environment
-cppflags+=-I $(freertos_core_dir)/inc
-cppflags+=-I $(freertos_portable_gcc_dir)/inc
-cppflags+=-I $(freertos_portable_mem_dir)/inc
+# Setup S_Guest compilation environment
+ifeq ($(BM_SUPPORT), y)
+	cppflags+=-I $(bm_core_port_dir)/inc
+endif
+ifeq ($(FreeRTOS_SUPPORT), y)
+	cppflags+=-I $(freertos_core_dir)/inc
+	cppflags+=-I $(freertos_portable_gcc_dir)/inc
+	cppflags+=-I $(freertos_portable_mem_dir)/inc
+endif
 
-export CROSS_COMPILE=/opt/CodeSourcery/arm-2010q1/bin/arm-none-linux-gnueabi-
+
 # Compiler and Flags
 sstrip = 	$(CROSS_COMPILE)strip
 cc=			$(CROSS_COMPILE)gcc
@@ -172,11 +201,16 @@ ifeq ($(DEBUG), y)
 	ldflags += -g
 endif
 
-visor_cflags=$(cppflags) $(TARGET_CCFLAGS) $(cflags) -DSW_KERNEL
-visor_asflags=$(asflags) $(cppflags) $(TARGET_ASMFLAGS) -DSW_KERNEL -nostdlib
+visor_cflags=$(cppflags) $(TARGET_CCFLAGS) $(cflags)
+visor_asflags=$(asflags) $(cppflags) $(TARGET_ASMFLAGS) -nostdlib
 
 final-objs-y=$(objs-y)
-final-objs-y+=$(kernel-objs-y)
+ifeq ($(BM_SUPPORT), y)
+	final-objs-y+=$(bm_guest-objs-y)
+endif
+ifeq ($(FreeRTOS_SUPPORT), y)
+	final-objs-y+=$(kernel-objs-y)
+endif
 
 # Default rule "make"
 .PHONY: all

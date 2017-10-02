@@ -5,7 +5,6 @@
  *
  * Authors:
  *  Sandro Pinto <sandro@tzvisor.org>
- *  Jorge Pereira <jorgepereira89@gmail.com>
  *
  * This file is part of LTZVisor.
  *
@@ -38,35 +37,51 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301 USA.
  *
- * [ltzvisor_nsguest_config.c]
+ * [blink.c]
  *
- * This file contains the LTZVisor NS Guest configuration.
+ * This file contains a bare-metal Blink application.
  * 
- * (#) $id: ltzvisor_nsguest_config.c 10-10-2015 s_pinto & j_pereira $
- * (#) $id: ltzvisor_nsguest_config.c 18-09-2017 s_pinto (modified)$
+ * (#) $id: blink.c 19-09-2017 s_pinto$
 */
 
-#include <ltzvisor_nsguest_config.h>
+#include<hw_zynq.h>
+#include<printk.h>
 
-/** Info from ltzvisor_nsguest.S */
-extern uint32_t GPOS0_start, GPOS0_end;
+void led_blink( void * pvParameters );
 
-/** Config structure according to NS Guest */
-struct nsguest_conf_entry nsguest_config[] ={
-	{
-		.gce_name = "Linux 3.3 (vanilla)",
-		.gce_id = 0,
-		/* No ram disk needed */
-		.gce_trd_init = 0,
-		/* Binary image size */
-		.gce_bin_start = (uint32_t) &GPOS0_start,
-		.gce_bin_end = (uint32_t) &GPOS0_end,
-		/* Load address */
-		#ifndef CONFIG_GPOSDDR
-			//.gce_bin_load = 0x0,
-			.gce_bin_load = 0x00100000,
-		#else
-			.gce_bin_load = 0x20000000,
-		#endif
+int main() {
+
+	/** Initialize hardware */
+	hw_init();
+
+	printk(" * Secure bare metal VM: running ... \n\t");
+
+	/** Generate tick every 1s */
+	tick_set(1000000);
+
+	/* Calling Blinking Task (LED blink at 1s) */
+	led_blink((void*)0);
+
+	/* This point will never be reached */
+	for( ;; );
+
+}
+
+/**
+ * Blink LED "Task"
+ *
+ * @param  	
+ *
+ * @retval 	
+ */
+void led_blink( void * parameters ){
+
+	static uint32_t toggle;
+	static uint32_t *ptr = (uint32_t *) 0x41200000;
+
+	for( ;; ){
+		toggle ^=0xFF;
+		*ptr = toggle;
+		YIELD()
 	}
-};
+}
