@@ -6,18 +6,20 @@ Introduction
 ------------
 
 LTZVisor is a lightweight TrustZone-assisted hypervisor. It allows the 
-consolidation of two virtual machines (VMs), running in each virtual world
-supported by TrustZone-enabled processors. The secure world tipically
-is used for running a small TCB size VM, while the non-secure world 
+consolidation of two virtual machines (VMs), running each oh them in 
+an independent virtual world supported by TrustZone-enabled processors. 
+The secure world tipically is used for running a small TCB size VM, 
+while the non-secure world is used for running a rich environment. 
   
 For the Cortex-A series a tipical configuration includes 
-running a RTOS as secure VM side by side with a GPOS as non-secure VM.
+running a RTOS as secure VM and a GPOS as non-secure VM.
 For the new generation Cortex-M microcontrollers it can be used for 
 running a bare metal application or a lightweight RTOS as secure VM 
 side by side with a RTOS or an embedded OS for IoT as non-secure VM.  
 
 
-NOTE: This is work in progress! Don't expect things to be complete. Use at your own risk
+NOTE: This is work in progress! Don't expect things to be complete. 
+Use at your own risk
 
 
 Community Resources
@@ -34,7 +36,6 @@ Project home:
 LTZVisor source code:
 
  - https://github.com/tzvisor/ltzvisor
- - git@github.com:tzvisor/ltzvisor.git
  
 Mailing list:
 	
@@ -42,11 +43,11 @@ Mailing list:
  
 Frequently Asked Questions (FAQ):
 
- - Comming soon ...
+ - Please see [FAQ file](FAQ.md)
  
 Contributing:
 
- - Please check [contribution doc](CONTRIBUTING.md) for details.
+ - Please see [Contribution file](CONTRIBUTING)
 
 
 Hardware requirements
@@ -83,36 +84,40 @@ LTZVisor has support for the following boards:
  - Xilinx Zynq UltraScale+ MPSoC ZCU102 Evaluation Kit (on going)
  - NXP i.MX6 (on going)
 
+ 
 Software requirements
 ------------
 
-LTZVisor was extensible tested under the following host configuration:
+LTZVisor was extensible tested under the following host configurations:
 
- - Ubuntu 12.04
-	* arm-none-linux-gcc 
-
-
-Configure
-------------
-
-Configuration information requirements comming soon ...
+ - Ubuntu 12.04 and Sourcery G++ Lite Toolchain (2011.03-42)
+	* arm-none-eabi-gcc 4.5.2 
+	* arm-none-eabi-as 2.20.51
+	* arm-none-eabi-ld 2.20.51 
+	* arm-none-eabi-objcopy 2.20.51 
+	
+ - Ubuntu 12.04 and Sourcery CodeBench Lite Toolchain (2012.09-105)
+	* arm-xilinx-eabi-gcc 4.7.2
+	* arm-xilinx-eabi-as 2.23.51 
+	* arm-xilinx-eabi-ld 2.23.51 
+	* arm-xilinx-eabi-objcopy 2.23.51 
 
 
 Build & Compile
 ------------
 
-Configuration information requirements comming soon ...
+Compiling information comming soon ...
 
 
 Demonstration
 ------------
 
-Demonstration information comming soon ...
+Demo information comming soon ...
 
 
 References
 ------------
 
- 1. LTZVisor ...
+ 1. Sandro Pinto, Jorge Pereira, Tiago Gomes, Adriano Tavares, and Jorge Cabral. "LTZVisor: TrustZone is the Key." In LIPIcs-Leibniz International Proceedings in Informatics, vol. 76. Schloss Dagstuhl-Leibniz-Zentrum fuer Informatik, 2017.
  
- 2. Towards ...
+ 2. Sandro Pinto, Daniel Oliveira, Jorge Pereira, Nuno Cardoso, Mongkol Ekpanyapong, Jorge Cabral, and Adriano Tavares. "Towards a lightweight embedded virtualization architecture exploiting ARM TrustZone." In Emerging Technology and Factory Automation (ETFA), IEEE, pp. 1-4., 2014.
