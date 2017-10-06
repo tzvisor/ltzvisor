@@ -58,8 +58,8 @@
 #define __PRINTK_H
 
 #include <types.h>
-#include <strings.h>
-#include <xilinx_uart.h>
+#include <string.h>
+#include <zynq_uart.h>
 
 typedef char *va_list;
 

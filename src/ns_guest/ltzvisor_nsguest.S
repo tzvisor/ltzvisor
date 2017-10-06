@@ -53,5 +53,9 @@
 .global GPOS0_start
 .global GPOS0_end
 GPOS0_start:
-	.incbin "./ns_guest/zynq/baremetal.bin";
+	#ifdef CONFIG_NS_BM
+		.incbin "./ns_guest/zynq/baremetal.bin";
+	#else
+		/* include OS binary here */
+	#endif
 GPOS0_end:

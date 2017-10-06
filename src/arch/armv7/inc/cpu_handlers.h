@@ -48,6 +48,8 @@
 #ifndef __ARMV7_CPU_HANDLERS_H
 #define __ARMV7_CPU_HANDLERS_H
 
+#include<printk.h>
+
 /**
  * Monitor FIQ exception handling
  *

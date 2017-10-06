@@ -1,17 +1,16 @@
 HYPERVISOR_PRODUCT = LTZVisor
 HYPERVISOR_MAJOR_VERSION = 0
-HYPERVISOR_MINOR_VERSION = 1
+HYPERVISOR_MINOR_VERSION = 2
+HYPERVISOR_REVISION_VERSION = 0
 
-export ARM_CPU:= CORTEX_A9
-export ARM_ARCH:= ARMV7
-export BOARD:= ZC702
-export OS_SUPPORT:=y
-export BM_SUPPORT:=y
-export FreeRTOS_SUPPORT:=n
-export GPOS_DDR:=n
+export BOARD:= ZEDBOARD
+export S_GUEST:= BARE_METAL
+export NS_GUEST:= BARE_METAL
+export CROSS_COMPILE:= arm-none-eabi-
 
-export SDK_PATH= $(CURDIR)
-export CROSS_COMPILE=/opt/CodeSourcery/arm-2010q1/bin/arm-none-linux-gnueabi-
+export SDK_PATH = $(CURDIR)
+
+#export CROSS_COMPILE = /opt/CodeSourcery/arm-xilinx-gnueabi/bin/arm-xilinx-eabi-
 
 all:
 	echo 'LTZVisor builds start'
