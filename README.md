@@ -143,21 +143,20 @@ Optionally it is possible to specify the target board:
 
  - Xilinx Zynq-7000 All Programmable SoC ZC702 Evaluation Kit:
 	
-	make BOARD=ZC702
+	`make BOARD=ZC702`
 
  - ZedBoard Zynq-7000 ARM/FPGA SoC Development Board
  
-	make BOARD=ZEDBOARD
+	`make BOARD=ZEDBOARD`
  
  - Zybo Zynq-7000 ARM/FPGA SoC Trainer Board
  
-	make BOARD=ZYBO
+	`make BOARD=ZYBO`
 	
 It is also possible to specify the cross compile toolchain as well
 as the VMs configuration:
 
-	make [BOARD=ZC702] [CROSS_COMPILE=arm-xilinx-eabi-] 
-[S_GUEST=BARE_METAL] [NS_GUEST=BARE_METAL]
+	make [BOARD=ZC702] [CROSS_COMPILE=arm-xilinx-eabi-] [S_GUEST=BARE_METAL] [NS_GUEST=BARE_METAL]
 
 (Instructions explaining how to run FreeRTOS as secure guest-OS 
 and Linux as non-secure guest-OS will be added soon).	
@@ -179,27 +178,34 @@ board is configured to boot from the SD card.
 
 4. Type the following sequence of commands:
 
- - Xilinx Zynq-7000 All Programmable SoC ZC702 Evaluation Kit:
+	- Xilinx Zynq-7000 All Programmable SoC ZC702 Evaluation Kit:
  
-	`mmcinfo`
-	`fatload mmc 0 0x3C000000 LTZVisor.bin`
-	`go 0x3C000000` 
+		`mmcinfo`
+		
+		`fatload mmc 0 0x3C000000 LTZVisor.bin`
+		
+		`go 0x3C000000` 
 
- - ZedBoard Zynq-7000 ARM/FPGA SoC Development Board:
+	- ZedBoard Zynq-7000 ARM/FPGA SoC Development Board:
  
-	`mmcinfo`
-	`fatload mmc 0 0x1C000000 LTZVisor.bin`
-	`go 0x1C000000` 
+		`mmcinfo`
+		
+		`fatload mmc 0 0x1C000000 LTZVisor.bin`
+		
+		`go 0x1C000000` 
 	
- - Zybo Zynq-7000 ARM/FPGA SoC Trainer Board:
+	- Zybo Zynq-7000 ARM/FPGA SoC Trainer Board:
  
-	`mmcinfo`
-	`fatload mmc 0 0x1C000000 LTZVisor.bin`
-	`go 0x1C000000` 
+		`mmcinfo`
+		
+		`fatload mmc 0 0x1C000000 LTZVisor.bin`
+		
+		`go 0x1C000000` 
 
-LTZVisor shall start running! For the default system configuration 
-(two bare metal VMs) the secure VM shall blink a set of LEDs every 
-second, while the non-secure VM shall print "Hello World" messages. 
+LTZVisor shall start immediately running! For the default system 
+configuration (two bare metal VMs) the secure VM shall blink a 
+set of LEDs every second, while the non-secure VM shall print 
+"Hello World" messages. 
 
 References
 ------------
