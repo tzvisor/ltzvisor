@@ -48,6 +48,9 @@
 
 #include <ltzvisor_api.h>
 
+/** Main is part of the secure VM */
+extern void main(void);
+
 /**
  * LTZVisor initialization 
  *
@@ -109,9 +112,6 @@ void ltzvisor_schedule(void){
  */
 uint32_t ltzvisor_nsguest_create( struct nsguest_conf_entry *g )
 {
-	#ifndef CONFIG_CACHE_L2X0
-		uint32_t *CACHEx2;
-	#endif
 
 	/** Init Guest attributes */
 	NS_Guest.booting = 1;
@@ -133,10 +133,10 @@ uint32_t ltzvisor_nsguest_create( struct nsguest_conf_entry *g )
 	NS_Guest.core.vcpu_regs_cp15.c1_SCTLR = 0x00c50078;
 	printk("      * NS_Guest CP15 registers - OK  \n\t");
 
-	#ifdef CONFIG_CACHE_L2X0
+//	#ifdef CONFIG_CACHE_L2X0
 		NS_Guest.core.vcpu_regs_cp15.c1_ACTLR = 0x00000006; /* L1 prefetch enable -bit2- + L2 Prefetch hint enable -bit1-*/
 		printk("      * NS_Guest L2 Cache - OK  \n\t");
-	#endif
+//	#endif
 
 	/** Load Guest bin to Non-Secure Memory */
 	printk("      * NS_Guest loading ...  \n\t");

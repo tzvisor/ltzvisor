@@ -173,7 +173,7 @@
  */
 .global cp15_restore
 .func cp15_restore
-	@ void cp15_restore(int * p_cp15_context);
+	@ void cp15_restore(struct cp15_regs * p_cp15_context);
 cp15_restore:
 	@ Move to NS
 	scr_nsbit_set r2

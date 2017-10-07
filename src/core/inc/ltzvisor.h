@@ -56,7 +56,7 @@
 #include <ltzvisor_api.h>
 #include <board.h>
 
-#define VERSION		"0.2.0"
+#define VERSION		"0.2.1"
 
 #define PREEMPTION 	1
 #define NO_PREEMPTION 	0

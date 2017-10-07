@@ -50,7 +50,6 @@
 #define __LTZVISOR_HW_H
 
 #include <types.h>
-#include <errno.h>
 #include <printk.h>
 #include <gic.h>
 #include <ltzvisor.h>

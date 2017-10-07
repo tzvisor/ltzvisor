@@ -53,9 +53,11 @@
 #include <cpu_defines.h>
 #include <cpu_helper.h>
 #include <cpu_vcpu.h>
+#include <cpu_cp15_switch.h>
 #include <ltzvisor.h>
 #include <ltzvisor_nsguest_config.h>
 #include <ltzvisor_hw.h>
+
 
 /**
  * LTZVisor initialization 

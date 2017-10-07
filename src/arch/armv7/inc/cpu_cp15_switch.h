@@ -38,42 +38,20 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301 USA.
  *
- * [ltzvisor_hw.h]
+ * [cpu_cp15_switch.h]
  *
- * This file contains the LTZVisor hardware-specific initialization.
+ * This file contains the CP15 coprocessor context-switch code (header).
  * 
- * (#) $id: ltzvisor_hw.h 10-06-2015 s_pinto & j_pereira $
- * (#) $id: ltzvisor_hw.h 17-09-2017 s_pinto (modified)$
+ * (#) $id: cpu_cp15_switch.h 07-10-2017 s_pinto $
 */
 
-#ifndef __LTZVISOR_HW_H
-#define __LTZVISOR_HW_H
+#ifndef __CPU_CP15_H
+#define __CPU_CP15_H
 
-#include <types.h>
-#include <printk.h>
-#include <gic.h>
-#include <ltzvisor.h>
-#include <board.h>
-#include <zynq_ttc.h>
+#include <cpu_vcpu.h>
 
-#define ARCH		"ARMv7-A"
-#define CPU		"Cortex-A9"
-#define PLATFORM	"Zynq-7000"
+void cp15_restore(struct cp15_regs * p_cp15_context);
 
-#define LTZVISOR_MON_EXIT() {\
-	asm volatile("msr cpsr_c,#(0x13 | 0x80 | 0x40)");\
-	asm volatile("ldr r1,=_supervisor_stack");\
-	asm volatile("add r1, r1, r0, lsl #12");\
-	asm volatile("add sp, r1, #4096");\
-}
+#endif /* __CPU_CP15_H */
 
-/**
- * LTZVisor hardware initialization
- *
- * @param  
- *
- * @retval Return TRUE if success or False if not
- */
-uint32_t ltzvisor_hw_init(void);
 
-#endif /* __LTZVISOR_HW_H */

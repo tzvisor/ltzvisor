@@ -130,7 +130,7 @@ uint32_t uart_set_baud_rate(uint8_t uart_id, uint32_t baud_rate){
 
 	Uart_Zynq * ptr_uart = Ptr_Uart[uart_id];
 
-	uint32_t sel_clk =  UART_FREQ_CLK;
+	//uint32_t sel_clk =  UART_FREQ_CLK;
 	uint8_t  bdiv = 0;
 	uint16_t cd_calc = 0;
 
