@@ -57,7 +57,7 @@
  *
  * @retval  content of address   
  */
-inline uint32_t read32( volatile void *addr );
+uint32_t read32( volatile void *addr );
 
 /**
  * Read a 32-bit address
@@ -66,6 +66,6 @@ inline uint32_t read32( volatile void *addr );
  *
  * @retval  content of address   
  */
-inline void write32( volatile void *addr, uint32_t data );
+void write32( volatile void *addr, uint32_t data );
 
 #endif /* __IO_H */

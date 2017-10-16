@@ -54,7 +54,7 @@
  *
  * @retval  value pointed by addr
  */
-uint32_t read32( volatile void * addr ){
+inline uint32_t read32( volatile void * addr ){
 
 	return *(uint32_t*)addr;
 }
@@ -66,7 +66,7 @@ uint32_t read32( volatile void * addr ){
  *
  * @retval  
  */
-void write32( volatile void *addr, uint32_t data ){
+inline void write32( volatile void *addr, uint32_t data ){
 
 	*(uint32_t*)addr = data;
 }

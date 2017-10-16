@@ -198,22 +198,24 @@ uint32_t ttc_request(uint32_t ttc_num, uint32_t timer_num, uint32_t useconds){
 	ptr_ttc->cnt_cntrl[timer_num] = cnt_cntrl;
 
 	/** Static handling - range [1us;1ms]*/
+	/* TODO - redo */
 	if( useconds>=1 && useconds<=1000 ) {
-		/* Prescaler = 1 -> F = 111MHz/1 (1ms = 27750 ticks) */
+		/* Prescaler = 1 -> F = 100MHz/(2^(1+1)) (1ms = 25000 ticks) */
 		clk_cntrl = ptr_ttc->clk_cntrl[timer_num];
 		clk_cntrl |= ( ((2-1) << 1) | 0x1 );			/* Prescaler = 1 */
 		ptr_ttc->clk_cntrl[timer_num] = clk_cntrl;
 
-		useconds = ((useconds * 27750) / 1000);
+		useconds = ((useconds * 25000) / 1000);
 	}
 	/** Static handling - range ]1ms;1s]*/
+	/* TODO - redo */
 	else if (useconds>1000 && useconds<=1000000) {
-		/* Prescaler = 11 -> F = 111MHz/11 (5ms = 271 ticks) */
+		/* Prescaler = 11 -> F = 100MHz/(2^(11+1)) (10ms = 244 ticks) */
 		clk_cntrl = ptr_ttc->clk_cntrl[timer_num];
 		clk_cntrl |= ( ((12-1) << 1) | 0x1 );			/* Prescaler = 11 */
 		ptr_ttc->clk_cntrl[timer_num] = clk_cntrl;
 
-		useconds = ((useconds * 271) / 10000);
+		useconds = ((useconds * 244) / 10000);
 
 	} 
 	else{

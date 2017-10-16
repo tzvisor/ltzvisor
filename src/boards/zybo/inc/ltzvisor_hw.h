@@ -38,45 +38,42 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301 USA.
  *
- * [ltzvisor.h]
+ * [ltzvisor_hw.h]
  *
- * This file contains the ltzvisor main entry point (header).
+ * This file contains the LTZVisor hardware-specific initialization.
  * 
- * (#) $id: ltzvisor.h 04-05-2015 s_pinto & j_pereira $
- * (#) $id: ltzvisor.h 16-09-2017 s_pinto (modified)$
+ * (#) $id: ltzvisor_hw.h 10-06-2015 s_pinto & j_pereira $
+ * (#) $id: ltzvisor_hw.h 17-09-2017 s_pinto (modified)$
 */
 
-#ifndef __LTZVISOR_H
-#define __LTZVISOR_H
+#ifndef __LTZVISOR_HW_H
+#define __LTZVISOR_HW_H
 
 #include <types.h>
 #include <printk.h>
-#include <cpu_vcpu.h>
+#include <gic.h>
 #include <ltzvisor.h>
-#include <ltzvisor_api.h>
 #include <board.h>
+#include <zynq_ttc.h>
 
-#define VERSION		"0.2.2"
+#define ARCH		"ARMv7-A"
+#define CPU		"Cortex-A9"
+#define PLATFORM	"Zynq-7000"
 
-#define PREEMPTION 	1
-#define NO_PREEMPTION 	0
-
-typedef struct {
-	struct vcpu_arch core;
-	char_t name[30];
-	uint32_t id;
-	uint32_t booting;
-}tzmachine;
-
-extern tzmachine NS_Guest;
+#define LTZVISOR_MON_EXIT() {\
+	asm volatile("msr cpsr_c,#(0x13 | 0x80 | 0x40)");\
+	asm volatile("ldr r1,=_supervisor_stack");\
+	asm volatile("add r1, r1, r0, lsl #12");\
+	asm volatile("add sp, r1, #4096");\
+}
 
 /**
- * LTZVisor main entry point
+ * LTZVisor hardware initialization
  *
- * @param  	
+ * @param  
  *
- * @retval 	
+ * @retval Return TRUE if success or False if not
  */
-void ltzvisor_main(void);
+uint32_t ltzvisor_hw_init(void);
 
-#endif /* __LTZVISOR_H */
+#endif /* __LTZVISOR_HW_H */

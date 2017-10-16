@@ -38,45 +38,84 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301 USA.
  *
- * [ltzvisor.h]
+ * [board.c]
  *
- * This file contains the ltzvisor main entry point (header).
+ * This file contains board-specific initializations.
  * 
- * (#) $id: ltzvisor.h 04-05-2015 s_pinto & j_pereira $
- * (#) $id: ltzvisor.h 16-09-2017 s_pinto (modified)$
+ * (#) $id: board.c 15-10-2015 s_pinto & j_pereira $
+ * (#) $id: board.c 20-09-2017 s_pinto (modified)$
 */
 
-#ifndef __LTZVISOR_H
-#define __LTZVISOR_H
-
-#include <types.h>
-#include <printk.h>
-#include <cpu_vcpu.h>
-#include <ltzvisor.h>
-#include <ltzvisor_api.h>
 #include <board.h>
 
-#define VERSION		"0.2.2"
-
-#define PREEMPTION 	1
-#define NO_PREEMPTION 	0
-
-typedef struct {
-	struct vcpu_arch core;
-	char_t name[30];
-	uint32_t id;
-	uint32_t booting;
-}tzmachine;
-
-extern tzmachine NS_Guest;
-
 /**
- * LTZVisor main entry point
+ * TrustZone-specific initializations
  *
  * @param  	
  *
  * @retval 	
  */
-void ltzvisor_main(void);
+uint32_t board_init(void){
 
-#endif /* __LTZVISOR_H */
+	/** Unlocking SLCR register */
+	write32( (void *)SLCR_UNLOCK, SLCR_UNLOCK_KEY);
+
+	/** Handling memory security */
+	write32( (void *)TZ_OCM_RAM0, 0xffffffff);
+	write32( (void *)TZ_OCM_RAM1, 0xffffffff);
+	write32( (void *)TZ_OCM, 0xffffffff);
+	/* Handling DDR memory security (first 14segments NS)l */
+	write32( (void *)TZ_DDR_RAM, 0x0000007f);
+	printk("      * Memory security - OK  \n\t");
+
+	/** Handling devices security */
+	/* SDIO0 slave security (NS) */
+	write32( (void *)SECURITY2_SDIO0, 0x1);
+	/* SDIO1 slave security (NS) */
+	write32( (void *)SECURITY3_SDIO1, 0x1);
+	/* QSPI slave security (NS) */
+	write32( (void *)SECURITY4_QSPI, 0x1);
+	/* APB slave security (NS) */
+	write32( (void *) SECURITY6_APBSL, 0x00007fff);
+	/* DMA slave security (S) */
+	write32( (void *)TZ_DMA_NS, 0x0);
+	write32( (void *)TZ_DMA_IRQ_NS, 0x0);
+	/* Ethernet security */
+	write32( (void *)TZ_GEM, 0x3);
+	/* FPGA AFI AXI ports TrustZone */
+	write32( (void *)SECURITY_APB, 0x3F);
+	/* Handling more devices ... */
+	printk("      * Devices security - OK  \n\t");
+
+	/** Locking SLCR register */
+	write32( (void *)SLCR_LOCK, SLCR_LOCK_KEY);
+
+	return TRUE;
+}
+
+/**
+ * Handling syscalls (SMCs)
+ *
+ * @param  	
+ *
+ * @retval 	
+ */
+uint32_t board_handler(uint32_t arg0, uint32_t arg1, uint32_t arg2, uint32_t arg3)
+{
+	switch(arg0) {
+		case (LTZVISOR_READ_SYSCALL):{
+			arg0 = read32((volatile void*)arg1);
+			break;
+		}
+		case (LTZVISOR_WRITE_SYSCALL):{
+			write32( (volatile void*)arg1, arg2);
+			break;
+		}
+		default:
+
+			break;
+	}
+
+		return arg0;
+}
+

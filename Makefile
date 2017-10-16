@@ -11,6 +11,7 @@ export CROSS_COMPILE:= arm-none-eabi-
 export SDK_PATH = $(CURDIR)
 
 #export CROSS_COMPILE = /opt/CodeSourcery/arm-xilinx-gnueabi/bin/arm-xilinx-eabi-
+export CROSS_COMPILE = /opt/Linaro/gcc-linaro-7.1.1-2017.08-x86_64_arm-eabi/bin/arm-eabi-
 
 all:
 	echo 'LTZVisor builds start'

@@ -38,45 +38,30 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301 USA.
  *
- * [ltzvisor.h]
+ * [platform_zynq.h]
  *
- * This file contains the ltzvisor main entry point (header).
+ * This file contains board-specific register definitions (header).
  * 
- * (#) $id: ltzvisor.h 04-05-2015 s_pinto & j_pereira $
- * (#) $id: ltzvisor.h 16-09-2017 s_pinto (modified)$
+ * (#) $id: platform_zynq.h 15-10-2015 s_pinto & j_pereira $
+ * (#) $id: platform_zynq.h 20-09-2017 s_pinto (modified)$
 */
 
-#ifndef __LTZVISOR_H
-#define __LTZVISOR_H
+#ifndef __PLATF_ZYNQ_H
+#define __PLATF_ZYNQ_H
 
-#include <types.h>
-#include <printk.h>
-#include <cpu_vcpu.h>
-#include <ltzvisor.h>
-#include <ltzvisor_api.h>
-#include <board.h>
+#define XSCU_BASE 	0xF8F00000
 
-#define VERSION		"0.2.2"
+#define GICC_OFFSET	0x0100
+#define GICD_OFFSET	0x1000
+#define MPIC_BASE	(XSCU_BASE + GICC_OFFSET)
+#define MPID_BASE	(XSCU_BASE + GICD_OFFSET)
 
-#define PREEMPTION 	1
-#define NO_PREEMPTION 	0
+#define MPTW_BASE	(XSCU_BASE + 0x0600)
 
-typedef struct {
-	struct vcpu_arch core;
-	char_t name[30];
-	uint32_t id;
-	uint32_t booting;
-}tzmachine;
+#define UART_BASE_0 	0xE0000000
+#define UART_BASE_1 	0xE0001000
 
-extern tzmachine NS_Guest;
+#define TTC0_BASE	0xF8001000
+#define TTC1_BASE 	0xF8002000
 
-/**
- * LTZVisor main entry point
- *
- * @param  	
- *
- * @retval 	
- */
-void ltzvisor_main(void);
-
-#endif /* __LTZVISOR_H */
+#endif /* __PLATF_ZYNQ_H */
