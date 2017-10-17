@@ -94,9 +94,17 @@ Software requirements
 ------------
 For building LTZVisor a host system should exist. The host system 
 must be endowed with an Operating Systems supporting a compilation 
-toolchain. 
+toolchain. We strongly recommend the use of Linaro GNU Toolchain:
 
-LTZVisor was extensible tested under the following host 
+ - Ubuntu 12.04 and Linaro GNU Toolchain (7.1.1-2017.08)
+	* arm-eabi-gcc 7.1.1 
+	* arm-eabi-as 2.28.2
+	* arm-none-eabi-ld 2.28.2
+	* arm-none-eabi-objcopy 2.28.2 
+
+Dowload: https://releases.linaro.org/components/toolchain/binaries/7.1-2017.08/arm-eabi/
+
+LTZVisor was also tested under the following host 
 configurations:
 
  - Ubuntu 12.04 and Sourcery G++ Lite Toolchain (2011.03-42)
