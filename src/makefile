@@ -162,7 +162,6 @@ cppflags+=-I$(src_dir)/arch/$(ARCH_DIR)/inc
 cppflags+=-I$(src_dir)/drivers/inc
 cppflags+=-I$(src_dir)/boards/$(BOARD_DIR)/inc
 cppflags+=-I$(src_dir)/arch/$(ARCH_DIR)/$(PLATFORM_DIR)/inc
-cppflags+=-I$(svisor_dir)/core/inc
 cppflags+=-I$(src_dir)/ns_guest/inc
 
 # Setup S_Guest compilation environment
