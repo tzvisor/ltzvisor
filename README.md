@@ -102,7 +102,7 @@ toolchain. We strongly recommend the use of Linaro GNU Toolchain:
 	* arm-none-eabi-ld 2.28.2
 	* arm-none-eabi-objcopy 2.28.2 
 
-Dowload: https://releases.linaro.org/components/toolchain/binaries/7.1-2017.08/arm-eabi/
+Download: https://releases.linaro.org/components/toolchain/binaries/7.1-2017.08/arm-eabi/
 
 LTZVisor was also tested under the following host 
 configurations:
