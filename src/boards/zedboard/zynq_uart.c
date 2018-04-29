@@ -178,7 +178,7 @@ uint32_t uart_getc(uint8_t uart_id){
 	uint32_t data = 0;
 
 	/* Wait until RxFIFO is filled up to the trigger level */
-	while(!ptr_uart->ch_status & UART_CH_STATUS_RTRIG);
+	while(!(char)(ptr_uart->ch_status & UART_CH_STATUS_RTRIG));
 
 	data = ptr_uart->tx_rx_fifo;
 
